@@ -1,0 +1,12 @@
+Word: again, Files: res/otherTest.txt
+Word: hello, Files: res/simpleTest.txt, res/otherTest.txt
+Word: is, Files: res/simpleTest.txt, res/otherTest.txt
+Word: it, Files: res/simpleTest.txt, res/otherTest.txt
+Word: kitty, Files: res/simpleTest.txt, res/otherTest.txt
+Word: meet, Files: res/simpleTest.txt, res/otherTest.txt
+Word: my, Files: res/simpleTest.txt, res/otherTest.txt
+Word: name, Files: res/simpleTest.txt, res/otherTest.txt
+Word: nice, Files: res/simpleTest.txt, res/otherTest.txt
+Word: s, Files: res/simpleTest.txt, res/otherTest.txt
+Word: to, Files: res/simpleTest.txt, res/otherTest.txt
+Word: you, Files: res/simpleTest.txt, res/otherTest.txt
