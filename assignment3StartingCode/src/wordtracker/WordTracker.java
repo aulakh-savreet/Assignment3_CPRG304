@@ -12,13 +12,9 @@ import java.util.regex.Pattern;
 /**
  * WordTracker
  *
- * This class:
- * - Loads an existing BST (of WordInfo) from repository.ser if available.
- * - Processes a given input file to extract words, store them in the BST along with
- *   their file/line occurrences.
- * - After processing, saves (serializes) the updated BST into repository.ser.
- * - Generates reports based on user-supplied flags (-pf, -pl, -po) and can optionally
- *   write them to a specified output file (-f <filename>).
+ * Loads an existing BST (of WordInfo) from repository.ser if available.
+ * Processes input files to track word occurrences (file and line numbers),
+ * saves results back to repository.ser, and generates reports.
  *
  * Usage:
  *   java -jar WordTracker.jar <input.txt> -pf|-pl|-po [-f <output.txt>]
@@ -31,9 +27,6 @@ public class WordTracker {
         loadRepository();
     }
 
-    /**
-     * Loads the BST from repository.ser if it exists, otherwise creates a new BST.
-     */
     @SuppressWarnings("unchecked")
     private void loadRepository() {
         if (Files.exists(Paths.get(REPOSITORY_FILE))) {
@@ -48,9 +41,6 @@ public class WordTracker {
         }
     }
 
-    /**
-     * Saves the current BST to repository.ser.
-     */
     private void saveRepository() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(REPOSITORY_FILE))) {
             oos.writeObject(wordTree);
@@ -59,14 +49,9 @@ public class WordTracker {
         }
     }
 
-    /**
-     * Processes an input file, reading it line by line, extracting words, and updating the BST.
-     * @param filename the name of the file to process
-     */
     public void processFile(String filename) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filename));
-            // Regex pattern to split on non-alphabetic characters
             Pattern wordPattern = Pattern.compile("[^a-zA-Z]+");
 
             for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
@@ -77,30 +62,22 @@ public class WordTracker {
                         BSTreeNode<WordInfo> existingNode = wordTree.search(temp);
 
                         if (existingNode == null) {
-                            // If the word is new, add it to the BST
                             wordTree.add(temp);
                             existingNode = wordTree.search(temp);
                         }
 
-                        // Add the file and line occurrence
                         existingNode.getElement().addLocation(filename, lineNum + 1);
                     }
                 }
             }
-            // After processing the file, save the BST
             saveRepository();
         } catch (IOException e) {
             System.err.println("Error processing file: " + e.getMessage());
         }
     }
 
-    /**
-     * Generates the report based on the specified flag and writes it to either console or a file.
-     * @param reportType one of -pf, -pl, -po
-     * @param outputFile optional filename for the report
-     */
     public void generateReport(String reportType, String outputFile) {
-        PrintStream output = System.out;
+        final PrintStream output;
         if (outputFile != null) {
             try {
                 output = new PrintStream(new FileOutputStream(outputFile));
@@ -108,6 +85,8 @@ public class WordTracker {
                 System.err.println("Error creating output file: " + e.getMessage());
                 return;
             }
+        } else {
+            output = System.out;
         }
 
         Iterator<WordInfo> it = wordTree.inorderIterator();
@@ -148,10 +127,6 @@ public class WordTracker {
         }
     }
 
-    /**
-     * Main method for command-line usage.
-     * @param args command line arguments
-     */
     public static void main(String[] args) {
         if (args.length < 2) {
             System.out.println("Usage: java -jar WordTracker.jar <input.txt> -pf|-pl|-po [-f <output.txt>]");
@@ -168,10 +143,7 @@ public class WordTracker {
             outputFile = args[3];
         }
 
-        // Process the input file
         tracker.processFile(inputFile);
-
-        // Generate the report
         tracker.generateReport(reportType, outputFile);
     }
 }
