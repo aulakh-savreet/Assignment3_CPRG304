@@ -9,44 +9,40 @@ import utilities.Iterator;
 /**
  * BSTree.java
  *
- * A class that implements a Binary Search Tree (BST). The BST is a data structure where each node has at most two children.
- * The elements are stored in a way that ensures the left child of a node is less than the node's element, 
- * and the right child is greater than or equal to the node's element.
+ * Implements a Binary Search Tree (BST) where each node has up to two children.
+ * Elements are organized so that left children are less than the parent node,
+ * and right children are greater than or equal to the parent node.
  * 
- * To accommodate the provided test files without modification, the root and size of the tree are shared across all instances
- * using static variables. This ensures that operations on any instance affect the shared tree structure.
+ * <p><strong>Note:</strong> To work with the provided test files without changes,
+ * the tree's root and size are shared across all instances using static variables.
+ * This means all BSTree instances operate on the same tree structure.
  * 
- * @param <E> The type of element stored in this tree, which must be comparable.
+ * @param <E> The type of elements stored in the tree, which must be comparable.
  */
 public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Static variables to share tree data across all instances
+    // Shared tree root and size across all instances
     private static BSTreeNode<?> staticRoot = null;
     private static int staticSize = 0;
 
-    // Instance variables to interact with the static tree data
+    // References to interact with the shared tree data
     private BSTreeNode<E> root;
     private int size;
 
     /**
-     * Constructs a new BSTree. This constructor resets the shared static root and size,
-     * ensuring that each new instance starts with an empty tree.
+     * Creates a new BSTree instance. Resets the shared root and size to start fresh.
      */
     @SuppressWarnings("unchecked")
     public BSTree() {
-        // Reset static variables to ensure a fresh tree for each instance
         staticRoot = null;
         staticSize = 0;
-        // Initialize instance variables to refer to the static tree data
         this.root = (BSTreeNode<E>) staticRoot;
         this.size = staticSize;
     }
 
     /**
-     * Synchronizes the instance variables with the static shared data.
-     * This method should be called at the beginning of each operation to ensure
-     * that the instance reflects the current state of the shared tree.
+     * Updates the instance's root and size to match the shared static data.
      */
     @SuppressWarnings("unchecked")
     private void syncWithStaticData() {
@@ -55,9 +51,7 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Synchronizes the static shared data with the instance variables.
-     * This method should be called after any operation that modifies the tree
-     * to update the shared static variables accordingly.
+     * Updates the shared static root and size based on the instance's data.
      */
     private void syncToStaticData() {
         staticRoot = this.root;
@@ -65,8 +59,8 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Retrieves the root node of the BST.
-     * 
+     * Gets the root node of the tree.
+     *
      * @return The root BSTreeNode.
      * @throws NullPointerException If the tree is empty.
      */
@@ -79,12 +73,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Retrieves the height of the BST.
-     * 
-     * The height is defined as the number of nodes along the longest path
-     * from the root node down to the farthest leaf node.
-     * 
-     * @return The height of the tree.
+     * Calculates the height of the tree.
+     *
+     * @return The height as an integer.
      */
     @Override
     public int getHeight() {
@@ -93,10 +84,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Recursively calculates the height of the BST starting from a given node.
-     * 
-     * @param node The current node in the tree.
-     * @return The height of the subtree rooted at the given node.
+     * Helper method to recursively determine the tree's height.
+     *
+     * @param node The current node.
+     * @return The height from this node.
      */
     private int getHeightRec(BSTreeNode<E> node) {
         if (node == null)
@@ -107,9 +98,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Retrieves the number of elements in the BST.
-     * 
-     * @return The size of the tree.
+     * Returns the number of elements in the tree.
+     *
+     * @return The size as an integer.
      */
     @Override
     public int size() {
@@ -118,9 +109,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Checks if the BST is empty.
-     * 
-     * @return true if the tree is empty; false otherwise.
+     * Checks if the tree is empty.
+     *
+     * @return True if empty, false otherwise.
      */
     @Override
     public boolean isEmpty() {
@@ -129,8 +120,7 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Clears the BST by removing all elements.
-     * Resets the root to null and size to 0.
+     * Removes all elements from the tree.
      */
     @Override
     public void clear() {
@@ -141,10 +131,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Checks if the BST contains a specific entry.
-     * 
-     * @param entry The element to search for in the tree.
-     * @return true if the element is found; false otherwise.
+     * Determines if a specific element exists in the tree.
+     *
+     * @param entry The element to search for.
+     * @return True if found, false otherwise.
      * @throws NullPointerException If the entry is null.
      */
     @Override
@@ -156,10 +146,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Searches for a specific entry in the BST.
-     * 
+     * Searches for a specific element and returns its node.
+     *
      * @param entry The element to search for.
-     * @return The BSTreeNode containing the entry, or null if not found.
+     * @return The node containing the element, or null if not found.
      * @throws NullPointerException If the entry is null.
      */
     @Override
@@ -171,11 +161,11 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Recursively searches for an entry starting from a given node.
-     * 
-     * @param node  The current node in the tree.
-     * @param entry The element to search for.
-     * @return The BSTreeNode containing the entry, or null if not found.
+     * Helper method to recursively search for an element.
+     *
+     * @param node  The current node.
+     * @param entry The element to find.
+     * @return The node containing the element, or null.
      */
     private BSTreeNode<E> searchRec(BSTreeNode<E> node, E entry) {
         if (node == null)
@@ -190,12 +180,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Adds a new entry to the BST.
-     * 
-     * Duplicates are not allowed; attempting to add a duplicate entry will return false.
-     * 
+     * Adds a new element to the tree.
+     *
      * @param newEntry The element to add.
-     * @return true if the element was added; false if it already exists.
+     * @return True if added successfully, false if it already exists.
      * @throws NullPointerException If the newEntry is null.
      */
     @Override
@@ -205,26 +193,25 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
 
         syncWithStaticData();
 
-        // Check if the tree already contains the entry
+        // Prevent adding duplicate entries
         if (contains(newEntry)) {
             return false;
         }
 
-        // Add the new entry recursively
+        // Insert the new element
         root = addRec(root, newEntry);
         size++;
 
-        // Update the static variables to reflect the changes
         syncToStaticData();
         return true;
     }
 
     /**
-     * Recursively adds a new entry to the BST starting from a given node.
-     * 
-     * @param node     The current node in the tree.
+     * Helper method to recursively add a new element.
+     *
+     * @param node     The current node.
      * @param newEntry The element to add.
-     * @return The updated node after insertion.
+     * @return The updated node.
      */
     private BSTreeNode<E> addRec(BSTreeNode<E> node, E newEntry) {
         if (node == null) {
@@ -238,14 +225,14 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
         } else if (cmp > 0) {
             node.setRight(addRec(node.getRight(), newEntry));
         }
-        // Equal case handled above in contains check (no duplicates added)
+        // No action needed for duplicate entries
         return node;
     }
 
     /**
-     * Removes the node with the minimum value from the BST.
-     * 
-     * @return The BSTreeNode containing the removed minimum element, or null if the tree is empty.
+     * Removes the smallest element from the tree.
+     *
+     * @return The node that was removed, or null if the tree is empty.
      */
     @Override
     public BSTreeNode<E> removeMin() {
@@ -261,9 +248,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Recursively removes the node with the minimum value starting from a given node.
-     * 
-     * @param node The current node in the tree.
+     * Helper method to recursively remove the smallest element.
+     *
+     * @param node The current node.
      * @return The updated node after removal.
      */
     private BSTreeNode<E> removeMinRec(BSTreeNode<E> node) {
@@ -278,10 +265,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Retrieves the node with the minimum value in the BST.
-     * 
-     * @param node The current node in the tree.
-     * @return The BSTreeNode with the minimum value.
+     * Finds the node with the smallest element.
+     *
+     * @param node The current node.
+     * @return The node with the smallest element.
      */
     private BSTreeNode<E> getMinNode(BSTreeNode<E> node) {
         while (node.getLeft() != null) {
@@ -291,9 +278,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Removes the node with the maximum value from the BST.
-     * 
-     * @return The BSTreeNode containing the removed maximum element, or null if the tree is empty.
+     * Removes the largest element from the tree.
+     *
+     * @return The node that was removed, or null if the tree is empty.
      */
     @Override
     public BSTreeNode<E> removeMax() {
@@ -309,9 +296,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Recursively removes the node with the maximum value starting from a given node.
-     * 
-     * @param node The current node in the tree.
+     * Helper method to recursively remove the largest element.
+     *
+     * @param node The current node.
      * @return The updated node after removal.
      */
     private BSTreeNode<E> removeMaxRec(BSTreeNode<E> node) {
@@ -326,10 +313,10 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Retrieves the node with the maximum value in the BST.
-     * 
-     * @param node The current node in the tree.
-     * @return The BSTreeNode with the maximum value.
+     * Finds the node with the largest element.
+     *
+     * @param node The current node.
+     * @return The node with the largest element.
      */
     private BSTreeNode<E> getMaxNode(BSTreeNode<E> node) {
         while (node.getRight() != null) {
@@ -339,12 +326,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Returns an inorder iterator for the BST.
-     * 
-     * Inorder traversal visits nodes in the following order:
-     * left subtree, root, right subtree.
-     * 
-     * @return An Iterator for inorder traversal.
+     * Provides an iterator to traverse the tree in inorder.
+     *
+     * @return An inorder Iterator.
      */
     @Override
     public Iterator<E> inorderIterator() {
@@ -353,12 +337,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Returns a preorder iterator for the BST.
-     * 
-     * Preorder traversal visits nodes in the following order:
-     * root, left subtree, right subtree.
-     * 
-     * @return An Iterator for preorder traversal.
+     * Provides an iterator to traverse the tree in preorder.
+     *
+     * @return A preorder Iterator.
      */
     @Override
     public Iterator<E> preorderIterator() {
@@ -367,12 +348,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Returns a postorder iterator for the BST.
-     * 
-     * Postorder traversal visits nodes in the following order:
-     * left subtree, right subtree, root.
-     * 
-     * @return An Iterator for postorder traversal.
+     * Provides an iterator to traverse the tree in postorder.
+     *
+     * @return A postorder Iterator.
      */
     @Override
     public Iterator<E> postorderIterator() {
@@ -381,29 +359,29 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
     }
 
     /**
-     * Enum representing the three types of tree traversal orders: PREORDER, INORDER, and POSTORDER.
+     * Defines the types of tree traversal orders available.
      */
     private enum TreeTraversalOrder {
         PREORDER, INORDER, POSTORDER
     }
 
     /**
-     * A private class that implements the Iterator interface for traversing the BST in different orders.
+     * Inner class that implements the Iterator interface for tree traversal.
      */
     private class TreeIterator implements Iterator<E> {
-        private ArrayList<E> elements; // List to store elements in traversal order
-        private int currentIndex;      // Current index in the traversal
+        private ArrayList<E> elements; // List to hold traversal elements
+        private int currentIndex;      // Current position in the list
 
         /**
-         * Constructs a TreeIterator with a specified traversal order.
-         * 
-         * @param order The traversal order for the iterator (PREORDER, INORDER, POSTORDER).
+         * Creates a TreeIterator for a specified traversal order.
+         *
+         * @param order The traversal order: PREORDER, INORDER, or POSTORDER.
          */
         public TreeIterator(TreeTraversalOrder order) {
             elements = new ArrayList<>();
             currentIndex = 0;
 
-            // Populate the elements list based on the traversal order
+            // Fill the list based on the traversal order
             switch (order) {
                 case PREORDER:
                     preorderTraverse(root);
@@ -418,9 +396,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
         }
 
         /**
-         * Recursively traverses the BST in preorder and adds elements to the list.
-         * 
-         * @param node The current node in the traversal.
+         * Traverses the tree in preorder and adds elements to the list.
+         *
+         * @param node The current node.
          */
         private void preorderTraverse(BSTreeNode<E> node) {
             if (node == null)
@@ -431,9 +409,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
         }
 
         /**
-         * Recursively traverses the BST in inorder and adds elements to the list.
-         * 
-         * @param node The current node in the traversal.
+         * Traverses the tree in inorder and adds elements to the list.
+         *
+         * @param node The current node.
          */
         private void inorderTraverse(BSTreeNode<E> node) {
             if (node == null)
@@ -444,9 +422,9 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
         }
 
         /**
-         * Recursively traverses the BST in postorder and adds elements to the list.
-         * 
-         * @param node The current node in the traversal.
+         * Traverses the tree in postorder and adds elements to the list.
+         *
+         * @param node The current node.
          */
         private void postorderTraverse(BSTreeNode<E> node) {
             if (node == null)
@@ -458,8 +436,8 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
 
         /**
          * Checks if there are more elements to iterate over.
-         * 
-         * @return true if there are more elements; false otherwise.
+         *
+         * @return True if more elements exist, false otherwise.
          */
         @Override
         public boolean hasNext() {
@@ -467,15 +445,15 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>, Se
         }
 
         /**
-         * Retrieves the next element in the iteration.
-         * 
-         * @return The next element in the traversal.
-         * @throws NoSuchElementException If there are no more elements to return.
+         * Returns the next element in the iteration.
+         *
+         * @return The next element.
+         * @throws NoSuchElementException If no more elements are available.
          */
         @Override
         public E next() throws NoSuchElementException {
             if (!hasNext())
-                throw new NoSuchElementException();
+                throw new NoSuchElementException("No more elements in the iterator.");
             return elements.get(currentIndex++);
         }
     }
